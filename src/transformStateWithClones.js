@@ -31,19 +31,17 @@ function transformStateWithClones(state, actions) {
     switch (element.type) {
       case 'addProperties':
         addExtraDataToState(stateObject, element.extraData);
-        result.push({ ...stateObject });
-        continue;
+        break;
       case 'removeProperties':
         removeKeys(stateObject, element.keysToRemove);
-        result.push({ ...stateObject });
-        continue;
+        break;
       case 'clear':
         clearState(stateObject);
-        result.push({ ...stateObject });
-        continue;
+        break;
       default:
         return null;
     }
+    result.push({ ...stateObject });
   }
 
   return result;
