@@ -24,22 +24,22 @@ function clearState(obj) {
 }
 
 function transformStateWithClones(state, actions) {
-  const copyObject = { ...state };
+  const stateObject = { ...state };
   const result = [];
 
   for (const element of actions) {
     switch (element.type) {
       case 'addProperties':
-        addExtraDataToState(copyObject, element.extraData);
-        result.push({ ...copyObject });
+        addExtraDataToState(stateObject, element.extraData);
+        result.push({ ...stateObject });
         continue;
       case 'removeProperties':
-        removeKeys(copyObject, element.keysToRemove);
-        result.push({ ...copyObject });
+        removeKeys(stateObject, element.keysToRemove);
+        result.push({ ...stateObject });
         continue;
       case 'clear':
-        clearState(copyObject);
-        result.push({ ...copyObject });
+        clearState(stateObject);
+        result.push({ ...stateObject });
         continue;
       default:
         return null;
