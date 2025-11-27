@@ -6,27 +6,44 @@
  *
  * @return {Object[]}
  */
+
+function addExtraDataToState(obj, extraKeys) {
+  Object.assign(obj, extraKeys);
+}
+
+function removeKeys(obj, keysToRemove) {
+  for (const keysToRemoveInArray of keysToRemove) {
+    delete obj[keysToRemoveInArray];
+  }
+}
+
+function clearState(obj) {
+  for (const keys in obj) {
+    delete obj[keys];
+  }
+}
+
 function transformStateWithClones(state, actions) {
   const copyObject = { ...state };
   const result = [];
 
   for (const element of actions) {
-    if (element.type === 'addProperties') {
-      Object.assign(copyObject, element.extraData);
+    switch (element.type) {
+      case 'addProperties':
+        addExtraDataToState(copyObject, element.extraData);
+        result.push({ ...copyObject });
+        continue;
+      case 'removeProperties':
+        removeKeys(copyObject, element.keysToRemove);
+        result.push({ ...copyObject });
+        continue;
+      case 'clear':
+        clearState(copyObject);
+        result.push({ ...copyObject });
+        continue;
+      default:
+        return null;
     }
-
-    if (element.type === 'removeProperties') {
-      for (const keysToRemoveInArray of element.keysToRemove) {
-        delete copyObject[keysToRemoveInArray];
-      }
-    }
-
-    if (element.type === 'clear') {
-      for (const keys in copyObject) {
-        delete copyObject[keys];
-      }
-    }
-    result.push({ ...copyObject });
   }
 
   return result;
